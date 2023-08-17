@@ -21,7 +21,6 @@ export class CadastrarPage implements OnInit {
   }
 
   cadastrar(){
-    console.log(this.nome + " " + this.email + " " + this.telefone);
     if(this.nome && this.telefone && this.genero){
       if(this.nome.length >=3){
         if(this.telefone.toString().length >= 8){

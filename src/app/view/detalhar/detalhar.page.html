@@ -1,0 +1,30 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title id="titulo">
+      Detalhar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-item>
+      <ion-input label="Nome" placeholder="Insira o nome" [(ngModel)]="nome"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input label="Email" type="string" placeholder="Insira o email" [(ngModel)]="email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input label="Telefone" type="number" placeholder="Insira o telefone" [(ngModel)]="telefone"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-select label="Gênero" placeholder="Selecione o gênero" [(ngModel)]="genero">
+        <ion-select-option value="0">Masculino</ion-select-option>
+        <ion-select-option value="1">Feminino</ion-select-option>
+        <ion-select-option value="2">Não declarado</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+</ion-content>
