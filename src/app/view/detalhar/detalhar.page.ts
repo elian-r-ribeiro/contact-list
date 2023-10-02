@@ -70,10 +70,6 @@ export class DetalharPage implements OnInit {
     }else{
         this.presentAlert("Erro ao cadastrar!", "Todos os campos são obrigatórios");
       }
-  
-    this.nome = "";
-    this.email = "";
-    this.telefone = NaN;
   }
 
   excluir(){

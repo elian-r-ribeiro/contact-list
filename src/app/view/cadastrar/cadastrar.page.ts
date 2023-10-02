@@ -40,9 +40,6 @@ export class CadastrarPage implements OnInit {
     }else{
       this.presentAlert("Erro ao cadastrar!", "Todos os campos são obrigatórios!");
     }
-    this.nome = "";
-    this.email = "";
-    this.telefone = NaN;
   }
 
   async presentAlert(subHeader : string, message : string) {
