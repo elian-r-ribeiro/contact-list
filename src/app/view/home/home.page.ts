@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Contato } from 'src/app/model/entities/Contato';
-import { ContatoService } from 'src/app/model/services/contato.service';
+import { FirebaseService } from 'src/app/model/services/firebase.service';
 
 @Component({
   selector: 'app-home',
@@ -11,8 +11,8 @@ import { ContatoService } from 'src/app/model/services/contato.service';
 export class HomePage {
   public listaDeContatos : Contato[] = [];
 
-  constructor(private router : Router, private contatoService: ContatoService) {
-    this.listaDeContatos = this.contatoService.obterTodos();
+  constructor(private router : Router, private firebase: FirebaseService) {
+    this.firebase.buscarTodos().subscribe(res => {this.listaDeContatos = res.map(contato => {return{id : contato.payload.doc.id, ...contato.payload.doc.data() as any} as Contato})});
   }
 
   irParaCadastrar(){

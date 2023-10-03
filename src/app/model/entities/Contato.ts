@@ -1,18 +1,27 @@
 export class Contato{
+    private _id!: string;
     private _nome: string;
-    private _email!: string;
+    private _email: string;
     private _telefone: number;
-    private _genero!: number;
+    private _genero: number;
 
-    constructor(nome: string, telefone: number){
+    constructor(nome: string, email : string, telefone : number, genero : number){
         this._nome = nome;
+        this._email = email;
         this._telefone = telefone;
+        this._genero = genero;
+    }
+
+    public get id(): string {
+        return this._id;
+    }
+    public set id(value: string) {
+        this._id = value;
     }
 
     public get nome(): string{
         return this._nome;
     }
-
     public set nome(nome: string){
         this._nome = nome;
     }
@@ -20,7 +29,6 @@ export class Contato{
     public get telefone(): number{
         return this._telefone;
     }
-
     public set telefone(telefone: number){
         this._telefone = telefone;
     }
@@ -28,7 +36,6 @@ export class Contato{
     public get email(): string{
         return this._email;
     }
-
     public set email(email: string){
         this._email = email;
     }

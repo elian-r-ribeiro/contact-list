@@ -44,32 +44,24 @@ export class DetalharPage implements OnInit {
   }
 
   editar(){
-    if(this.nome && this.email && this.telefone){
-      if(this.nome.length >= 3){
-        if(this.validarEmail(this.email)){
-          if(this.telefone.toString().length >= 9){
-            let novo : Contato = new Contato(this.nome, this.telefone);
-          
-            if(this.email){
-              novo.email = this.email;
-            }
+    if(this.nome && this.email && this.telefone && this.genero){
+      if(this.nome.length >=3){
+        if(this.telefone.toString().length >= 8){
+          if(this.validarEmail(this.email)){
+            let novo : Contato = new Contato(this.nome, this.email, this.telefone, this.genero);
             this.contatoService.atualizar(this.indice, novo);
-            this.router.navigate(["/home"]);
+          }else{
+            this.presentAlert("Erro ao cadastrar!", "O email digitado não é válido!")
           }
-          else{
-            this.presentAlert("Erro ao cadastrar!", "N° de telefone incorreto");
-          }
+        }else{
+          this.presentAlert("Erro ao cadastrar!", "O número precisa ter pelo menos oito caracteres!");
         }
-        else{
-          this.presentAlert("Erro ao cadastrar!", "Email incorreto");
-        }
-      }
-      else{
-        this.presentAlert("Erro ao cadastrar!", "Nome muito curto");
+      }else{
+        this.presentAlert("Erro ao cadastrar!", "O nome precisa ter pelo menos três caracteres!");
       }
     }else{
-        this.presentAlert("Erro ao cadastrar!", "Todos os campos são obrigatórios");
-      }
+      this.presentAlert("Erro ao cadastrar!", "Todos os campos são obrigatórios!");
+    }
   }
 
   excluir(){

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Contato } from 'src/app/model/entities/Contato';
-import { ContatoService } from 'src/app/model/services/contato.service';
+import { FirebaseService } from 'src/app/model/services/firebase.service';
 
 @Component({
   selector: 'app-cadastrar',
@@ -15,22 +15,21 @@ export class CadastrarPage implements OnInit {
   public telefone! : number;
   public genero! : number;
 
-  constructor(private alertController: AlertController, private contatoService : ContatoService, private router : Router) { }
+  constructor(private alertController: AlertController, private firebase : FirebaseService ,private router : Router) { }
 
   ngOnInit() {
   }
 
   cadastrar(){
-    if(this.nome && this.telefone && this.genero){
+    if(this.nome && this.email && this.telefone && this.genero){
       if(this.nome.length >=3){
         if(this.telefone.toString().length >= 8){
-          let novo : Contato = new Contato(this.nome, this.telefone);
-          if(this.email){
-            novo.email = this.email;
+          if(this.validarEmail(this.email)){
+            let novo : Contato = new Contato(this.nome, this.email, this.telefone, this.genero);
+            this.firebase.cadastrar(novo).then(() => this.router.navigate(["/home"])).catch((error) => {console.log(error); this.presentAlert('Erro!', 'Algo inesperado aconteceu!')})
+          }else{
+            this.presentAlert("Erro ao cadastrar!", "O email digitado não é válido!")
           }
-          novo.genero = this.genero;
-          this.contatoService.cadastrar(novo);
-          this.router.navigate(["/home"])
         }else{
           this.presentAlert("Erro ao cadastrar!", "O número precisa ter pelo menos oito caracteres!");
         }
@@ -40,6 +39,11 @@ export class CadastrarPage implements OnInit {
     }else{
       this.presentAlert("Erro ao cadastrar!", "Todos os campos são obrigatórios!");
     }
+  }
+  
+  validarEmail(email: string): boolean{
+    const padrao = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return padrao.test(email);
   }
 
   async presentAlert(subHeader : string, message : string) {
