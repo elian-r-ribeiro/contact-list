@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Contato } from 'src/app/model/entities/Contato';
-import { ContatoService } from 'src/app/model/services/contato.service';
+import { FirebaseService } from 'src/app/model/services/firebase.service';
 
 @Component({
   selector: 'app-detalhar',
@@ -18,17 +18,12 @@ export class DetalharPage implements OnInit {
   contato! : Contato;
   edicao: boolean = true;
 
-  constructor(private alertController: AlertController, private actRoute : ActivatedRoute, private contatoService : ContatoService, private router: Router) {
+  constructor(private alertController: AlertController, private firebase : FirebaseService, private router: Router) {
 
    }
 
   ngOnInit() {
-    this.actRoute.params.subscribe((parametros) => {
-      if(parametros["indice"]){
-        this.indice = parametros["indice"];
-      }
-    })
-    this.contato = this.contatoService.obterPorIndice(this.indice);
+    this.contato = history.state.contato;
     this.nome = this.contato.nome;
     this.telefone = this.contato.telefone;
     this.email = this.contato.email;
@@ -49,7 +44,7 @@ export class DetalharPage implements OnInit {
         if(this.telefone.toString().length >= 8){
           if(this.validarEmail(this.email)){
             let novo : Contato = new Contato(this.nome, this.email, this.telefone, this.genero);
-            this.contatoService.atualizar(this.indice, novo);
+            this.firebase.editar(novo, this.contato.id).then(()=> this.router.navigate(["/home"])).catch((error) => {console.log(error); this.presentAlert("Error!", "Erro ao atualizar o contato!")});
           }else{
             this.presentAlert("Erro ao cadastrar!", "O email digitado não é válido!")
           }
@@ -69,8 +64,8 @@ export class DetalharPage implements OnInit {
   }
 
   excluirContato(){
-    this.contatoService.deletar(this.indice);
-    this.router.navigate(["/home"])
+    this.firebase.excluir(this.contato.id).then(() => {this.router.navigate(["/home"])}).catch((error) => {console.log(error); this.presentAlert("Error!", "Erro ao atualizar o contato!")});
+    this.router.navigate(["/home"]);
   }
   
   validarEmail(email: string): boolean{

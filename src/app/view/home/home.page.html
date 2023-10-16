@@ -8,8 +8,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list *ngFor="let contato of this.listaDeContatos; let i = index">
-    <ion-item (click)="editar(i)">
+  <ion-list *ngFor="let contato of this.listaDeContatos">
+    <ion-item (click)="editar(contato)">
       <ion-label>{{contato.nome}}</ion-label>
     </ion-item>
   </ion-list>
