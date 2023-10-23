@@ -14,6 +14,7 @@ export class CadastrarPage implements OnInit {
   public email!: string;
   public telefone! : number;
   public genero! : number;
+  public imagem : any;
 
   constructor(private alertController: AlertController, private firebase : FirebaseService ,private router : Router) { }
 
@@ -26,7 +27,12 @@ export class CadastrarPage implements OnInit {
         if(this.telefone.toString().length >= 8){
           if(this.validarEmail(this.email)){
             let novo : Contato = new Contato(this.nome, this.email, this.telefone, this.genero);
-            this.firebase.cadastrar(novo).then(() => this.router.navigate(["/home"])).catch((error) => {console.log(error); this.presentAlert('Erro!', 'Algo inesperado aconteceu!')})
+            if(this.imagem){
+              this.firebase.uploadImage(this.imagem, novo)
+              ?.then(() => {this.router.navigate(["/home"])});
+            }else{
+              this.firebase.cadastrar(novo).then(() => this.router.navigate(["/home"])).catch((error) => {console.log(error); this.presentAlert('Erro!', 'Algo inesperado aconteceu!')})
+            }
           }else{
             this.presentAlert("Erro ao cadastrar!", "O email digitado não é válido!")
           }
@@ -55,6 +61,10 @@ export class CadastrarPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  uploadFile(imagem : any){
+    this.imagem = imagem.files;
   }
 
 }
