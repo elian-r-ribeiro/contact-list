@@ -1,16 +1,14 @@
 export class Contato{
     private _id!: string;
     private _nome: string;
-    private _email: string;
+    private _email!: string;
     private _telefone: number;
-    private _genero: number;
+    private _genero!: number;
     private _downloadURL : any;
 
-    constructor(nome: string, email : string, telefone : number, genero : number){
+    constructor(nome: string, telefone : number){
         this._nome = nome;
-        this._email = email;
         this._telefone = telefone;
-        this._genero = genero;
     }
 
     public get id(): string {

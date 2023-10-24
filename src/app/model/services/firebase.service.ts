@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Contato } from '../entities/Contato';
 import { finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { AlertController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 export class FirebaseService {
   private PATH : string = 'contatos';
 
-  constructor(private firestore : AngularFirestore, private storage : AngularFireStorage) { }
+  constructor(private firestore : AngularFirestore, private storage : AngularFireStorage, private alertController : AlertController) { }
 
   buscarTodos(){
     return this.firestore.collection(this.PATH).snapshotChanges();
@@ -53,4 +54,15 @@ export class FirebaseService {
     ).subscribe();
     return task;
   }
+
+  async presentAlert(subHeader: string, message: string) {
+    const alert = await this.alertController.create({
+      header: 'Agenda de Contatos',
+      subHeader: subHeader,
+      message: message,
+      buttons: ['OK'],
+    });
+  
+    await alert.present();
+    }
 }

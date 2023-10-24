@@ -17,6 +17,7 @@ export class DetalharPage implements OnInit {
   genero! : number;
   contato! : Contato;
   edicao: boolean = true;
+  imagem! : any;
 
   constructor(private alertController: AlertController, private firebase : FirebaseService, private router: Router) {
 
@@ -38,27 +39,43 @@ export class DetalharPage implements OnInit {
     }
   }
 
-  editar(){
-    if(this.nome && this.email && this.telefone && this.genero){
-      if(this.nome.length >=3){
-        if(this.telefone.toString().length >= 8){
-          if(this.validarEmail(this.email)){
-            let novo : Contato = new Contato(this.nome, this.email, this.telefone, this.genero);
-            this.firebase.editar(novo, this.contato.id).then(()=> this.router.navigate(["/home"])).catch((error) => {console.log(error); this.presentAlert("Error!", "Erro ao atualizar o contato!")});
-          }else{
-            this.presentAlert("Erro ao cadastrar!", "O email digitado não é válido!")
-          }
-        }else{
-          this.presentAlert("Erro ao cadastrar!", "O número precisa ter pelo menos oito caracteres!");
-        }
-      }else{
-        this.presentAlert("Erro ao cadastrar!", "O nome precisa ter pelo menos três caracteres!");
-      }
-    }else{
-      this.presentAlert("Erro ao cadastrar!", "Todos os campos são obrigatórios!");
-    }
+  uploadFile(imagem : any){
+    this.imagem = imagem.files;
   }
 
+  editar(){
+    if(this.nome && this.email && this.telefone){
+      if(this.nome.length >= 3){
+        if(this.validarEmail(this.email)){
+          if(this.telefone.toString().length >= 9){
+            let novo : Contato = new Contato(this.nome, this.telefone);
+          
+            if(this.email){
+              novo.email = this.email;
+            }
+            novo.genero = this.genero;
+            novo.id = this.contato.id;
+            if(this.imagem){
+              this.firebase.uploadImage(this.imagem, novo)?.then(() => {this.router.navigate(["/home"]);})
+            }else{novo.downloadURL = this.contato.downloadURL;
+              this.firebase.editar(novo, this.contato.id).then(() => this.router.navigate(["/home"]))
+              .catch((error) => {console.log(error); this.firebase.presentAlert("Erro", "Erro ao atualizar o contato!")});}
+          }
+          else{
+            this.firebase.presentAlert("Erro ao cadastrar!", "N° de telefone incorreto");
+          }
+        }
+        else{
+          this.presentAlert("Erro ao cadastrar!", "Email incorreto");
+        }
+      }
+      else{
+        this.presentAlert("Erro ao cadastrar!", "Nome muito curto");
+      }
+    }else{
+        this.presentAlert("Erro ao cadastrar!", "Todos os campos são obrigatórios");
+      }
+    }
   excluir(){
     this.presentConfirmAlert("ATENÇÃO!", "Deseja realmente excluir o contato?")
   }
