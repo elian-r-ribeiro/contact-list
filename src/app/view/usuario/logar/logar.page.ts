@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Alert } from 'src/app/common/alert';
 
 @Component({
   selector: 'app-logar',
@@ -11,7 +12,7 @@ export class LogarPage implements OnInit {
 
   logar!: FormGroup;
 
-  constructor(private router : Router, private builder : FormBuilder) {
+  constructor(private router : Router, private builder : FormBuilder, private alert : Alert) {
     this.logar = new FormGroup({
       email: new FormControl(''),
       senha: new FormControl('')
@@ -31,9 +32,9 @@ export class LogarPage implements OnInit {
 
   submitForm(){
     if(this.logar.valid){
-      console.log('campos ok')
+      this.alert.presentAlert("Ok!", "Todos os campos válidos!");
     }else{
-      console.log('campos com erro')
+      this.alert.presentAlert("Erro!", "Há campos inválidos!");
     }
   }
 

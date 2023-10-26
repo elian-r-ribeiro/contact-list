@@ -1,4 +1,9 @@
+import { Injectable } from "@angular/core";
 import { AlertController } from "@ionic/angular";
+
+@Injectable({
+  providedIn: 'root'
+})
 
 export class Alert{
     constructor(private alertController : AlertController){}

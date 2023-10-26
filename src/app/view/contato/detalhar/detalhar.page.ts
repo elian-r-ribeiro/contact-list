@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { Alert } from 'src/app/common/alert';
 import { Contato } from 'src/app/model/entities/Contato';
 import { FirebaseService } from 'src/app/model/services/firebase.service';
 
@@ -19,7 +20,7 @@ export class DetalharPage implements OnInit {
   edicao: boolean = true;
   imagem! : any;
 
-  constructor(private alertController: AlertController, private firebase : FirebaseService, private router: Router) {
+  constructor(private alertController: AlertController, private firebase : FirebaseService, private router: Router, private  alert : Alert) {
 
    }
 
@@ -59,21 +60,21 @@ export class DetalharPage implements OnInit {
               this.firebase.uploadImage(this.imagem, novo)?.then(() => {this.router.navigate(["/home"]);})
             }else{novo.downloadURL = this.contato.downloadURL;
               this.firebase.editar(novo, this.contato.id).then(() => this.router.navigate(["/home"]))
-              .catch((error) => {console.log(error); this.firebase.presentAlert("Erro", "Erro ao atualizar o contato!")});}
+              .catch((error) => {console.log(error); this.alert.presentAlert("Erro", "Erro ao atualizar o contato!")});}
           }
           else{
-            this.firebase.presentAlert("Erro ao cadastrar!", "N° de telefone incorreto");
+            this.alert.presentAlert("Erro ao cadastrar!", "N° de telefone incorreto");
           }
         }
         else{
-          this.presentAlert("Erro ao cadastrar!", "Email incorreto");
+          this.alert.presentAlert("Erro ao cadastrar!", "Email incorreto");
         }
       }
       else{
-        this.presentAlert("Erro ao cadastrar!", "Nome muito curto");
+        this.alert.presentAlert("Erro ao cadastrar!", "Nome muito curto");
       }
     }else{
-        this.presentAlert("Erro ao cadastrar!", "Todos os campos são obrigatórios");
+        this.alert.presentAlert("Erro ao cadastrar!", "Todos os campos são obrigatórios");
       }
     }
   excluir(){
@@ -81,23 +82,13 @@ export class DetalharPage implements OnInit {
   }
 
   excluirContato(){
-    this.firebase.excluir(this.contato.id).then(() => {this.router.navigate(["/home"])}).catch((error) => {console.log(error); this.presentAlert("Error!", "Erro ao atualizar o contato!")});
+    this.firebase.excluir(this.contato.id).then(() => {this.router.navigate(["/home"])}).catch((error) => {console.log(error); this.alert.presentAlert("Error!", "Erro ao atualizar o contato!")});
     this.router.navigate(["/home"]);
   }
   
   validarEmail(email: string): boolean{
     const padrao = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return padrao.test(email);
-  }
-
-  async presentAlert(subHeader: string, message: string) {
-    const alert = await this.alertController.create({
-      header: 'Agenda de Contatos',
-      subHeader: subHeader,
-      message: message,
-      buttons: ['OK'],
-    });
-  await alert.present();
   }
 
   async presentConfirmAlert(subHeader: string, message: string) {

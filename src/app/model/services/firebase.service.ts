@@ -54,15 +54,4 @@ export class FirebaseService {
     ).subscribe();
     return task;
   }
-
-  async presentAlert(subHeader: string, message: string) {
-    const alert = await this.alertController.create({
-      header: 'Agenda de Contatos',
-      subHeader: subHeader,
-      message: message,
-      buttons: ['OK'],
-    });
-  
-    await alert.present();
-    }
 }
